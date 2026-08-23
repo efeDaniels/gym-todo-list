@@ -416,3 +416,55 @@ export function getTodayKey(date: Date = new Date()): DayKey {
   };
   return map[jsDay]!;
 }
+
+// -------------------- EXERCISE IMAGES --------------------
+// Source: https://github.com/yuhonas/free-exercise-db (MIT lisanslı)
+
+const EXERCISE_IMAGE_BASE =
+  "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises";
+
+const EXERCISE_IMAGE_SLUGS: Record<string, string> = {
+  // PUSH (pazartesi)
+  "p-1": "Barbell_Bench_Press_-_Medium_Grip",
+  "p-2": "Barbell_Incline_Bench_Press_-_Medium_Grip",
+  "p-3": "Dumbbell_Bench_Press",
+  "p-4": "Dumbbell_Shoulder_Press",
+  "p-5": "Side_Lateral_Raise",
+  // p-6 (Cable Serratus Punch): free-exercise-db'de karşılığı yok
+  "p-7": "Triceps_Pushdown",
+
+  // LEGS (carsamba)
+  "lg-0": "Leg_Extensions",
+  "lg-1": "Barbell_Squat",
+  "lg-2": "Hyperextensions_Back_Extensions",
+  "lg-3": "Hack_Squat",
+  "lg-4": "Barbell_Hip_Thrust",
+  "lg-5": "Lying_Leg_Curls",
+  "lg-6": "Leg_Extensions",
+  "lg-7": "One-Legged_Cable_Kickback",
+  "lg-8": "Standing_Calf_Raises",
+
+  // UPPER (cuma)
+  "u-1": "Incline_Cable_Flye",
+  "u-2": "Weighted_Pull_Ups",
+  "u-3": "Seated_Cable_Rows",
+  "u-4": "Cable_Seated_Lateral_Raise",
+  "u-5": "EZ-Bar_Curl",
+  "u-6": "Close-Grip_Barbell_Bench_Press",
+  "u-7": "Straight-Arm_Pulldown",
+
+  // PULL (pazar)
+  "pl-1": "Barbell_Deadlift",
+  "pl-2": "Wide-Grip_Lat_Pulldown",
+  "pl-3": "T-Bar_Row_with_Handle",
+  "pl-4": "Straight-Arm_Pulldown",
+  "pl-5": "Face_Pull",
+  "pl-6": "Incline_Dumbbell_Curl",
+  "pl-7": "Hammer_Curls",
+};
+
+export function getExerciseImageUrl(exerciseId: string): string | null {
+  const slug = EXERCISE_IMAGE_SLUGS[exerciseId];
+  if (!slug) return null;
+  return `${EXERCISE_IMAGE_BASE}/${slug}/0.jpg`;
+}

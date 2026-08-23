@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { CheckIcon } from "./Icon";
-import type { Exercise } from "../data/workouts";
+import { getExerciseImageUrl, type Exercise } from "../data/workouts";
 
 type Props = {
   exercise: Exercise;
@@ -36,9 +37,12 @@ export function ExerciseCard({
   onToggleSet,
   index,
 }: Props) {
+  const [imgError, setImgError] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const doneCount = completed.filter(Boolean).length;
   const allDone = doneCount === exercise.sets && exercise.sets > 0;
   const tag = exercise.tag ? TAG_STYLE[exercise.tag] : null;
+  const imageUrl = getExerciseImageUrl(exercise.id);
 
   return (
     <article
@@ -49,7 +53,25 @@ export function ExerciseCard({
         ${allDone ? "opacity-70" : ""}
       `}
     >
-      <header className="flex items-start justify-between gap-3">
+      <header className="flex items-start gap-3">
+        {imageUrl && !imgError && (
+          <div
+            className={`
+              relative h-16 w-16 shrink-0 overflow-hidden rounded-lg
+              bg-[var(--color-surface-2)]
+              ${imgLoaded ? "" : "animate-pulse"}
+            `}
+          >
+            <img
+              src={imageUrl}
+              alt={exercise.name}
+              loading="lazy"
+              onLoad={() => setImgLoaded(true)}
+              onError={() => setImgError(true)}
+              className={`h-full w-full object-cover transition-opacity duration-200 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+            />
+          </div>
+        )}
         <div className="min-w-0 flex-1">
           <div className="mb-1 flex items-center gap-2">
             <span className="text-xs font-medium tabular-nums text-[var(--color-text-mute)]">
