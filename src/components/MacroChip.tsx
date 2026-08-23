@@ -1,9 +1,4 @@
-export type MacroData = {
-  kcal: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-};
+import type { MacroData } from "../data/nutrition";
 
 type Props = {
   data: MacroData;

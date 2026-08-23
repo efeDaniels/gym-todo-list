@@ -341,3 +341,50 @@ export const SCENARIOS: Scenario[] = [
     note: "Orijinal plan. Protein çeşitliliği yüksek, mikronütrient dağılımı iyi.",
   },
 ];
+
+// -------------------- PER-MEAL MACROS --------------------
+
+export type MacroData = {
+  kcal: number;
+  protein: number;
+  carbs: number;
+  fat: number;
+};
+
+const FIXED_MEAL_MACROS: Record<string, MacroData> = {
+  "meal-0": { kcal: 5, protein: 0, carbs: 1, fat: 0 },
+  "meal-1": { kcal: 287, protein: 19, carbs: 20, fat: 15 },
+  "meal-2": { kcal: 116, protein: 4, carbs: 4, fat: 10 },
+  "meal-4": { kcal: 105, protein: 1, carbs: 27, fat: 0 },
+  "meal-shake": { kcal: 120, protein: 24, carbs: 2, fat: 1.5 },
+};
+
+const SCENARIO_MEAL_MACROS: Record<string, Record<string, MacroData>> = {
+  "meal-3": {
+    "sc-a": { kcal: 590, protein: 66, carbs: 36, fat: 17 },
+    "sc-b": { kcal: 540, protein: 48, carbs: 35, fat: 21 },
+    "sc-c": { kcal: 341, protein: 42, carbs: 12, fat: 13 },
+    "sc-d": { kcal: 590, protein: 66, carbs: 36, fat: 17 },
+  },
+  "meal-5": {
+    "sc-a": { kcal: 892, protein: 72, carbs: 103, fat: 18 },
+    "sc-b": { kcal: 856, protein: 59, carbs: 98, fat: 22 },
+    "sc-c": { kcal: 406, protein: 44, carbs: 26, fat: 13 },
+    "sc-d": { kcal: 816, protein: 76, carbs: 100, fat: 14 },
+  },
+  "meal-6": {
+    "sc-a": { kcal: 225, protein: 34, carbs: 2, fat: 9 },
+    "sc-b": { kcal: 197, protein: 24, carbs: 2, fat: 10 },
+    "sc-c": { kcal: 156, protein: 23, carbs: 2, fat: 7 },
+    "sc-d": { kcal: 156, protein: 23, carbs: 2, fat: 7 },
+  },
+};
+
+export function getMealMacros(
+  mealId: string,
+  scenarioId: string,
+): MacroData | null {
+  const fixed = FIXED_MEAL_MACROS[mealId];
+  if (fixed) return fixed;
+  return SCENARIO_MEAL_MACROS[mealId]?.[scenarioId] ?? null;
+}

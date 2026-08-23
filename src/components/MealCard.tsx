@@ -1,14 +1,22 @@
 import { CheckIcon } from "./Icon";
-import type { Meal } from "../data/nutrition";
+import { MacroChip } from "./MacroChip";
+import type { Meal, MacroData } from "../data/nutrition";
 
 type Props = {
   meal: Meal;
   completed: boolean[];
   onToggleItem: (itemIndex: number) => void;
   onToggleAll: () => void;
+  macros?: MacroData | null;
 };
 
-export function MealCard({ meal, completed, onToggleItem, onToggleAll }: Props) {
+export function MealCard({
+  meal,
+  completed,
+  onToggleItem,
+  onToggleAll,
+  macros,
+}: Props) {
   const doneCount = completed.filter(Boolean).length;
   const total = meal.items.length;
   const allDone = doneCount === total && total > 0;
@@ -70,6 +78,12 @@ export function MealCard({ meal, completed, onToggleItem, onToggleAll }: Props) 
           <CheckIcon size={22} className={allDone ? "anim-pop" : ""} />
         </button>
       </header>
+
+      {macros && (
+        <div className="mt-3">
+          <MacroChip data={macros} size="sm" />
+        </div>
+      )}
 
       <ul className="mt-3 space-y-2">
         {meal.items.map((item, i) => {

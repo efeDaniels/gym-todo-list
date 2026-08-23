@@ -10,6 +10,7 @@ import {
   CARB_SOURCES,
   PROTEIN_SHAKE,
   SCENARIOS,
+  getMealMacros,
   type MacroInfo,
   type Scenario,
 } from "../data/nutrition";
@@ -143,6 +144,7 @@ export function NutritionView() {
               completed={nutrition.getCompleted(meal)}
               onToggleItem={(i) => nutrition.toggleItem(meal, i)}
               onToggleAll={() => nutrition.toggleAll(meal)}
+              macros={getMealMacros(meal.id, selectedScenarioId)}
             />
           ))}
         </div>

@@ -10,7 +10,7 @@ import {
   DumbbellIcon,
   MoonIcon,
 } from "./Icon";
-import { NUTRITION_PLAN, SCENARIOS } from "../data/nutrition";
+import { NUTRITION_PLAN, SCENARIOS, getMealMacros } from "../data/nutrition";
 import { formatDateLong } from "../lib/dateKey";
 import {
   DAY_ORDER,
@@ -165,6 +165,7 @@ export function TodayView({ onNavigate }: Props) {
               completed={nutrition.getCompleted(meal)}
               onToggleItem={(i) => nutrition.toggleItem(meal, i)}
               onToggleAll={() => nutrition.toggleAll(meal)}
+              macros={getMealMacros(meal.id, selectedScenarioId)}
             />
           ))}
         </div>
