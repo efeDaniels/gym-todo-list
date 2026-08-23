@@ -4,14 +4,16 @@ import { ProgressRing } from "./ProgressRing";
 import { WaterTracker } from "./WaterTracker";
 import { WorkoutDaySection } from "./WorkoutDaySection";
 import { MealCard } from "./MealCard";
+import { MacroChip } from "./MacroChip";
 import {
   AppleIcon,
   DumbbellIcon,
   MoonIcon,
 } from "./Icon";
-import { NUTRITION_PLAN } from "../data/nutrition";
+import { NUTRITION_PLAN, SCENARIOS } from "../data/nutrition";
 import { formatDateLong } from "../lib/dateKey";
 import {
+  DAY_ORDER,
   getDayByKey,
   getTodayKey,
   type DayKey,
@@ -21,6 +23,7 @@ import {
   useWater,
   useWorkoutDayState,
 } from "../lib/hooks";
+import { usePersistentState } from "../lib/storage";
 import type { Tab } from "./BottomNav";
 
 type Props = {
@@ -33,6 +36,13 @@ export function TodayView({ onNavigate }: Props) {
   const workout = useWorkoutDayState(todayKey, day);
   const nutrition = useNutritionState();
   const water = useWater();
+  const [selectedScenarioId] = usePersistentState<string>(
+    "nutrition:scenario",
+    SCENARIOS[0]!.id,
+  );
+
+  const selectedScenario =
+    SCENARIOS.find((s) => s.id === selectedScenarioId) ?? SCENARIOS[0]!;
 
   const now = useMemo(() => new Date(), []);
   const dateLabel = formatDateLong(now);
@@ -43,6 +53,9 @@ export function TodayView({ onNavigate }: Props) {
         title={day.isRest ? "Bugün" : `${day.title ?? "Bugün"}`}
         subtitle={`${day.dayLong} · ${dateLabel}`}
       />
+
+      {/* Week overview strip */}
+      <WeekStrip todayKey={todayKey} onNavigate={onNavigate} />
 
       {/* Hero summary — two rings */}
       <section className="mt-4 rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-surface-2)] p-4">
@@ -124,11 +137,25 @@ export function TodayView({ onNavigate }: Props) {
 
       {/* Today's meals */}
       <div className="safe-bottom-nav mt-6">
-        <div className="mb-3 flex items-center gap-2 px-1">
-          <AppleIcon size={16} className="text-[var(--color-success)]" />
-          <h2 className="text-[13px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
-            Bugünün Beslenmesi
-          </h2>
+        <div className="mb-3 flex items-center justify-between gap-3 px-1">
+          <div className="flex items-center gap-2">
+            <AppleIcon size={16} className="text-[var(--color-success)]" />
+            <h2 className="text-[13px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
+              Bugünün Beslenmesi
+            </h2>
+          </div>
+          <button
+            type="button"
+            onClick={() => onNavigate("nutrition")}
+            className="flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1 text-[11px] font-semibold text-[var(--color-text-dim)] transition-all active:scale-95"
+            aria-label={`Senaryo: ${selectedScenario.name}, değiştir`}
+          >
+            <span className="text-sm">{selectedScenario.emoji}</span>
+            <span className="tabular-nums">{selectedScenario.kcal} kcal</span>
+          </button>
+        </div>
+        <div className="mb-3">
+          <MacroChip data={selectedScenario} showKcal={false} size="sm" />
         </div>
         <div className="space-y-3">
           {NUTRITION_PLAN.map((meal) => (
@@ -142,6 +169,98 @@ export function TodayView({ onNavigate }: Props) {
           ))}
         </div>
       </div>
+    </div>
+  );
+}
+
+// -------------------- Week strip --------------------
+
+const DAY_INITIAL: Record<DayKey, string> = {
+  pazartesi: "P",
+  sali: "S",
+  carsamba: "Ç",
+  persembe: "P",
+  cuma: "C",
+  cumartesi: "C",
+  pazar: "P",
+};
+
+const AMBIGUOUS_TITLE_GLYPH: Record<string, string> = {
+  PUSH: "↑",
+  PULL: "↓",
+};
+
+type WeekStripProps = {
+  todayKey: DayKey;
+  onNavigate: (tab: Tab) => void;
+};
+
+function WeekStrip({ todayKey, onNavigate }: WeekStripProps) {
+  return (
+    <div className="mt-3 flex gap-1 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-1.5">
+      {DAY_ORDER.map((k) => {
+        const d = getDayByKey(k);
+        const isToday = k === todayKey;
+        const labelChar = d.isRest
+          ? null
+          : (d.title ? AMBIGUOUS_TITLE_GLYPH[d.title] : undefined) ??
+            d.title?.charAt(0) ??
+            "•";
+        return (
+          <button
+            key={k}
+            type="button"
+            onClick={() => onNavigate("workout")}
+            aria-current={isToday ? "date" : undefined}
+            aria-label={`${d.dayLong}${d.isRest ? " - Dinlenme" : ` - ${d.title}`}`}
+            className={`
+              relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-xl py-1.5
+              transition-all duration-150 active:scale-95
+              ${
+                isToday
+                  ? "bg-[var(--color-accent-glow)]"
+                  : "hover:bg-[var(--color-surface-2)]"
+              }
+            `}
+          >
+            <span
+              className={`text-[9px] font-bold uppercase tracking-wider ${
+                isToday
+                  ? "text-[var(--color-accent)]"
+                  : "text-[var(--color-text-mute)]"
+              }`}
+            >
+              {DAY_INITIAL[k]}
+            </span>
+            {labelChar ? (
+              <span
+                className={`text-sm font-extrabold leading-none ${
+                  isToday
+                    ? "text-[var(--color-accent)]"
+                    : "text-[var(--color-text)]"
+                }`}
+              >
+                {labelChar}
+              </span>
+            ) : (
+              <MoonIcon
+                size={12}
+                className={
+                  isToday
+                    ? "text-[var(--color-accent)]"
+                    : "text-[var(--color-rest)]/60"
+                }
+              />
+            )}
+            {isToday && (
+              <span
+                aria-hidden
+                className="absolute -bottom-0.5 h-0.5 w-4 rounded-full bg-[var(--color-accent)]"
+              />
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }
