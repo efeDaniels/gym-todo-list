@@ -388,3 +388,63 @@ export function getMealMacros(
   if (fixed) return fixed;
   return SCENARIO_MEAL_MACROS[mealId]?.[scenarioId] ?? null;
 }
+
+// -------------------- PER-ITEM KCAL --------------------
+// Item sırası NUTRITION_PLAN'daki her meal.items dizisiyle birebir eşleşir.
+
+const FIXED_ITEM_KCALS: Record<string, number[]> = {
+  "meal-0": [5],
+  "meal-1": [215, 72],
+  "meal-2": [116],
+  "meal-4": [105],
+  "meal-shake": [120],
+};
+
+const SCENARIO_ITEM_KCALS: Record<string, Record<string, number[]>> = {
+  "meal-3": {
+    "sc-a": [330, 142, 88, 30],
+    "sc-b": [274, 148, 88, 30],
+    "sc-c": [192, 31, 88, 30],
+    "sc-d": [330, 142, 88, 30],
+  },
+  "meal-5": {
+    "sc-a": [330, 444, 30, 88],
+    "sc-b": [274, 464, 30, 88],
+    "sc-c": [192, 96, 30, 88],
+    "sc-d": [270, 428, 30, 88],
+  },
+  "meal-6": {
+    "sc-a": [165, 60],
+    "sc-b": [137, 60],
+    "sc-c": [96, 60],
+    "sc-d": [96, 60],
+  },
+};
+
+export function getItemKcal(
+  mealId: string,
+  itemIndex: number,
+  scenarioId: string,
+): number | null {
+  const fixed = FIXED_ITEM_KCALS[mealId];
+  if (fixed) return fixed[itemIndex] ?? null;
+  return SCENARIO_ITEM_KCALS[mealId]?.[scenarioId]?.[itemIndex] ?? null;
+}
+
+export function computeConsumedKcal(
+  state: Record<string, boolean[]>,
+  scenarioId: string,
+): number {
+  let total = 0;
+  for (const meal of NUTRITION_PLAN) {
+    const completed = state[meal.id];
+    if (!completed) continue;
+    for (let i = 0; i < completed.length; i++) {
+      if (completed[i]) {
+        const kcal = getItemKcal(meal.id, i, scenarioId);
+        if (kcal !== null) total += kcal;
+      }
+    }
+  }
+  return total;
+}

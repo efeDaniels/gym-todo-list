@@ -8,6 +8,7 @@ type Props = {
   onToggleItem: (itemIndex: number) => void;
   onToggleAll: () => void;
   macros?: MacroData | null;
+  itemKcals?: (number | null)[];
 };
 
 export function MealCard({
@@ -16,6 +17,7 @@ export function MealCard({
   onToggleItem,
   onToggleAll,
   macros,
+  itemKcals,
 }: Props) {
   const doneCount = completed.filter(Boolean).length;
   const total = meal.items.length;
@@ -140,6 +142,21 @@ export function MealCard({
                     </p>
                   )}
                 </div>
+                {itemKcals?.[i] != null && (
+                  <span
+                    className={`
+                      mt-0.5 shrink-0 rounded-md px-1.5 py-0.5
+                      text-[10px] font-bold tabular-nums tracking-wider
+                      ${
+                        done
+                          ? "bg-[var(--color-surface-3)] text-[var(--color-text-mute)]"
+                          : "bg-[var(--color-accent-glow)] text-[var(--color-accent)]"
+                      }
+                    `}
+                  >
+                    {itemKcals[i]} kcal
+                  </span>
+                )}
               </button>
             </li>
           );

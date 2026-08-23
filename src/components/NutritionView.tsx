@@ -11,6 +11,8 @@ import {
   PROTEIN_SHAKE,
   SCENARIOS,
   getMealMacros,
+  getItemKcal,
+  computeConsumedKcal,
   type MacroInfo,
   type Scenario,
 } from "../data/nutrition";
@@ -25,6 +27,11 @@ export function NutritionView() {
 
   const selectedScenario =
     SCENARIOS.find((s) => s.id === selectedScenarioId) ?? SCENARIOS[0]!;
+  const consumedKcal = computeConsumedKcal(
+    nutrition.state,
+    selectedScenarioId,
+  );
+  const kcalPct = Math.min(consumedKcal / selectedScenario.kcal, 1);
 
   const handleReset = () => {
     if (
@@ -47,21 +54,30 @@ export function NutritionView() {
 
       {/* Summary + target macros for selected scenario */}
       <section className="mt-4 rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-surface-2)] p-4">
-        <div className="flex items-end justify-between">
-          <div>
+        <div className="flex items-end justify-between gap-3">
+          <div className="min-w-0">
             <div className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
-              Günlük İlerleme
+              Alınan Kalori
             </div>
             <div className="mt-1 flex items-baseline gap-1.5">
               <span className="text-3xl font-extrabold tabular-nums text-[var(--color-accent)]">
-                {Math.round(nutrition.summary.pct * 100)}
+                {consumedKcal}
               </span>
               <span className="text-sm font-medium text-[var(--color-text-mute)]">
-                %
+                / {selectedScenario.kcal} kcal
               </span>
             </div>
           </div>
           <div className="text-right text-xs tabular-nums text-[var(--color-text-dim)]">
+            <div>
+              <span className="font-semibold text-[var(--color-text)]">
+                {nutrition.mealsDone}
+              </span>
+              <span className="text-[var(--color-text-mute)]">
+                {" "}
+                / {nutrition.mealsTotal} öğün
+              </span>
+            </div>
             <div>
               <span className="font-semibold text-[var(--color-text)]">
                 {nutrition.summary.done}
@@ -73,16 +89,13 @@ export function NutritionView() {
             </div>
             <div>
               <span className="font-semibold text-[var(--color-text)]">
-                {nutrition.mealsDone}
+                {Math.round(kcalPct * 100)}
               </span>
-              <span className="text-[var(--color-text-mute)]">
-                {" "}
-                / {nutrition.mealsTotal} öğün
-              </span>
+              <span className="text-[var(--color-text-mute)]">% hedef</span>
             </div>
           </div>
         </div>
-        <ProgressBar value={nutrition.summary.pct} className="mt-3" />
+        <ProgressBar value={kcalPct} className="mt-3" />
 
         <div className="mt-4 rounded-xl border border-[var(--color-border)]/60 bg-[var(--color-surface-2)]/60 p-3">
           <div className="mb-2 flex items-center justify-between">
@@ -145,6 +158,9 @@ export function NutritionView() {
               onToggleItem={(i) => nutrition.toggleItem(meal, i)}
               onToggleAll={() => nutrition.toggleAll(meal)}
               macros={getMealMacros(meal.id, selectedScenarioId)}
+              itemKcals={meal.items.map((_, i) =>
+                getItemKcal(meal.id, i, selectedScenarioId),
+              )}
             />
           ))}
         </div>

@@ -10,7 +10,13 @@ import {
   DumbbellIcon,
   MoonIcon,
 } from "./Icon";
-import { NUTRITION_PLAN, SCENARIOS, getMealMacros } from "../data/nutrition";
+import {
+  NUTRITION_PLAN,
+  SCENARIOS,
+  getMealMacros,
+  getItemKcal,
+  computeConsumedKcal,
+} from "../data/nutrition";
 import { formatDateLong } from "../lib/dateKey";
 import {
   DAY_ORDER,
@@ -43,6 +49,11 @@ export function TodayView({ onNavigate }: Props) {
 
   const selectedScenario =
     SCENARIOS.find((s) => s.id === selectedScenarioId) ?? SCENARIOS[0]!;
+  const consumedKcal = computeConsumedKcal(
+    nutrition.state,
+    selectedScenarioId,
+  );
+  const kcalPct = Math.min(consumedKcal / selectedScenario.kcal, 1);
 
   const now = useMemo(() => new Date(), []);
   const dateLabel = formatDateLong(now);
@@ -105,15 +116,17 @@ export function TodayView({ onNavigate }: Props) {
             aria-label="Beslenmeye git"
           >
             <ProgressRing
-              value={nutrition.summary.pct}
+              value={kcalPct}
               color="var(--color-success)"
-              label={`${nutrition.mealsDone}/${nutrition.mealsTotal}`}
-              sublabel="Öğün"
+              label={`${consumedKcal}`}
+              sublabel="KCAL"
               size={92}
             />
             <div className="flex items-center gap-1.5 text-xs font-semibold text-[var(--color-text-dim)]">
               <AppleIcon size={14} className="text-[var(--color-success)]" />
-              <span>Beslenme</span>
+              <span>
+                Beslenme · {nutrition.mealsDone}/{nutrition.mealsTotal}
+              </span>
             </div>
           </button>
         </div>
@@ -151,7 +164,9 @@ export function TodayView({ onNavigate }: Props) {
             aria-label={`Senaryo: ${selectedScenario.name}, değiştir`}
           >
             <span className="text-sm">{selectedScenario.emoji}</span>
-            <span className="tabular-nums">{selectedScenario.kcal} kcal</span>
+            <span className="tabular-nums">
+              {consumedKcal} / {selectedScenario.kcal} kcal
+            </span>
           </button>
         </div>
         <div className="mb-3">
@@ -166,6 +181,9 @@ export function TodayView({ onNavigate }: Props) {
               onToggleItem={(i) => nutrition.toggleItem(meal, i)}
               onToggleAll={() => nutrition.toggleAll(meal)}
               macros={getMealMacros(meal.id, selectedScenarioId)}
+              itemKcals={meal.items.map((_, i) =>
+                getItemKcal(meal.id, i, selectedScenarioId),
+              )}
             />
           ))}
         </div>
