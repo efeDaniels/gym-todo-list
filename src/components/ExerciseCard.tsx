@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CheckIcon } from "./Icon";
-import { getExerciseImageUrl, type Exercise } from "../data/workouts";
+import { getExerciseGifUrl, type Exercise } from "../data/workouts";
 
 type Props = {
   exercise: Exercise;
@@ -42,7 +42,7 @@ export function ExerciseCard({
   const doneCount = completed.filter(Boolean).length;
   const allDone = doneCount === exercise.sets && exercise.sets > 0;
   const tag = exercise.tag ? TAG_STYLE[exercise.tag] : null;
-  const imageUrl = getExerciseImageUrl(exercise.id);
+  const imageUrl = getExerciseGifUrl(exercise.id);
 
   return (
     <article
@@ -112,7 +112,7 @@ export function ExerciseCard({
           </span>
           {exercise.rpe && (
             <span className="text-[var(--color-text-dim)]">
-              <span className="text-[var(--color-text-mute)]">RPE:</span>{" "}
+              <span className="text-[var(--color-text-mute)]">Şiddet:</span>{" "}
               <span className="font-semibold text-[var(--color-text)]">
                 {exercise.rpe}
               </span>
