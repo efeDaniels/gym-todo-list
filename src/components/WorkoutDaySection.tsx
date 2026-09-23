@@ -4,6 +4,7 @@ import { ProgressBar } from "./ProgressBar";
 import { MoonIcon } from "./Icon";
 import type { DayKey, WorkoutDay } from "../data/workouts";
 import { useWorkoutDayState } from "../lib/hooks";
+import { l, t, useLang } from "../lib/i18n";
 
 type Props = {
   dayKey: DayKey;
@@ -12,9 +13,13 @@ type Props = {
 };
 
 export function WorkoutDaySection({ dayKey, day, showTitle = true }: Props) {
+  const [lang] = useLang();
   const { getCompleted, toggleSet, summary } = useWorkoutDayState(dayKey, day);
 
-  const focusLine = useMemo(() => day.focus.join(" · "), [day.focus]);
+  const focusLine = useMemo(
+    () => l(day.focus, lang).join(" · "),
+    [day.focus, lang],
+  );
 
   if (day.isRest) {
     return (
@@ -26,10 +31,10 @@ export function WorkoutDaySection({ dayKey, day, showTitle = true }: Props) {
             </div>
             <div>
               <h2 className="text-lg font-bold text-[var(--color-text)]">
-                Dinlenme Günü
+                {t("restDayHeading", lang)}
               </h2>
               <p className="text-xs text-[var(--color-text-dim)]">
-                {day.dayLong}
+                {l(day.dayLong, lang)}
               </p>
             </div>
           </div>
@@ -39,10 +44,10 @@ export function WorkoutDaySection({ dayKey, day, showTitle = true }: Props) {
             <MoonIcon size={32} />
           </div>
           <h3 className="text-base font-semibold text-[var(--color-text)]">
-            Bugün dinlenme
+            {t("restToday", lang)}
           </h3>
           <p className="mt-1.5 text-sm leading-relaxed text-[var(--color-text-dim)]">
-            {day.restNote ?? "Bugün antrenman yok. İyi dinlen."}
+            {day.restNote ? l(day.restNote, lang) : t("restDefaultNote", lang)}
           </p>
         </div>
       </section>
@@ -56,7 +61,7 @@ export function WorkoutDaySection({ dayKey, day, showTitle = true }: Props) {
           <div className="mb-3 flex items-end justify-between gap-3">
             <div className="min-w-0">
               <div className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
-                {day.dayLong}
+                {l(day.dayLong, lang)}
               </div>
               <h2 className="mt-0.5 text-2xl font-extrabold leading-tight tracking-tight text-[var(--color-text)]">
                 {day.title}
@@ -73,7 +78,7 @@ export function WorkoutDaySection({ dayKey, day, showTitle = true }: Props) {
                 <span className="text-sm text-[var(--color-text-mute)]">%</span>
               </div>
               <div className="mt-0.5 text-[10px] font-medium tabular-nums text-[var(--color-text-mute)]">
-                {summary.done} / {summary.total} SET
+                {summary.done} / {summary.total} {t("setUnit", lang)}
               </div>
             </div>
           </div>

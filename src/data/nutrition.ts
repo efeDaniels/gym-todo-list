@@ -1,127 +1,204 @@
+import { loc, type Localized } from "../lib/i18n";
+
 export type MealItem = {
-  text: string;
-  hint?: string;
+  text: Localized<string>;
+  hint?: Localized<string>;
 };
 
 export type Meal = {
   id: string;
-  time: string; // e.g. "Uyanır uyanmaz", "12:30", "14–15"
+  time: Localized<string>; // e.g. "Uyanır uyanmaz", "12:30", "14–15"
   timeShort: string;
-  title: string;
+  title: Localized<string>;
   emoji: string;
   items: MealItem[];
-  note?: string;
+  note?: Localized<string>;
 };
 
 export const NUTRITION_PLAN: Meal[] = [
   {
     id: "meal-0",
-    time: "Uyanır uyanmaz",
+    time: loc("Uyanır uyanmaz", "On waking"),
     timeShort: "06:30",
-    title: "Sirke & Limon",
+    title: loc("Sirke & Limon", "Vinegar & Lemon"),
     emoji: "🍋",
     items: [
       {
-        text: "1 y.k. elma sirkesi + yarım limon suyu",
-        hint: "1 bardak suya karıştır, aç karnına iç",
+        text: loc(
+          "1 y.k. elma sirkesi + yarım limon suyu",
+          "1 tbsp apple cider vinegar + juice of half a lemon",
+        ),
+        hint: loc(
+          "1 bardak suya karıştır, aç karnına iç",
+          "Mix into a glass of water, drink on empty stomach",
+        ),
       },
     ],
-    note: "20 dk sonra kahvaltıya geçebilirsin.",
+    note: loc(
+      "20 dk sonra kahvaltıya geçebilirsin.",
+      "You can move on to breakfast after 20 min.",
+    ),
   },
   {
     id: "meal-1",
-    time: "Kahvaltı",
+    time: loc("Kahvaltı", "Breakfast"),
     timeShort: "07:00",
-    title: "Kahvaltı",
+    title: loc("Kahvaltı", "Breakfast"),
     emoji: "🍳",
     items: [
-      { text: "3 tam yumurta" },
-      { text: "3 adet kuru kayısı", hint: "Gün kurusu değil" },
+      { text: loc("3 tam yumurta", "3 whole eggs") },
+      {
+        text: loc("3 adet kuru kayısı", "3 dried apricots"),
+        hint: loc("Gün kurusu değil", "Not sun-dried"),
+      },
     ],
   },
   {
     id: "meal-2",
-    time: "Ara Öğün",
+    time: loc("Ara Öğün", "Snack"),
     timeShort: "10:30",
-    title: "Sabah Ara Öğün",
+    title: loc("Sabah Ara Öğün", "Morning Snack"),
     emoji: "🌰",
-    items: [{ text: "20 g çiğ badem" }],
+    items: [{ text: loc("20 g çiğ badem", "20 g raw almonds") }],
   },
   {
     id: "meal-3",
-    time: "Öğlen",
+    time: loc("Öğlen", "Lunch"),
     timeShort: "12:30",
-    title: "Öğle Yemeği",
+    title: loc("Öğle Yemeği", "Lunch"),
     emoji: "🍖",
     items: [
-      { text: "200 g yağsız kıyma / et / tavuk göğsü", hint: "Çiğ ölçüsü" },
       {
-        text: "40 g haşlanmış bulgur / karabuğday (greçka) / basmati pirinç",
-        hint: "Çiğ ölçüsü",
+        text: loc(
+          "200 g yağsız kıyma / et / tavuk göğsü",
+          "200 g lean mince / red meat / chicken breast",
+        ),
+        hint: loc("Çiğ ölçüsü", "Raw weight"),
       },
-      { text: "10 g zeytinyağı", hint: "Isıtmadan, soğuk tüket" },
-      { text: "Salata veya haşlanmış sebze" },
+      {
+        text: loc(
+          "40 g haşlanmış bulgur / karabuğday (greçka) / basmati pirinç",
+          "40 g boiled bulgur / buckwheat / basmati rice",
+        ),
+        hint: loc("Çiğ ölçüsü", "Raw weight"),
+      },
+      {
+        text: loc("10 g zeytinyağı", "10 g olive oil"),
+        hint: loc("Isıtmadan, soğuk tüket", "Use cold, don't heat"),
+      },
+      {
+        text: loc(
+          "Salata veya haşlanmış sebze",
+          "Salad or steamed vegetables",
+        ),
+      },
     ],
   },
   {
     id: "meal-4",
-    time: "14–15",
+    time: loc("14–15", "14–15"),
     timeShort: "14:30",
-    title: "Öğleden Sonra",
+    title: loc("Öğleden Sonra", "Afternoon"),
     emoji: "🍌",
-    items: [{ text: "1 adet muz" }],
+    items: [{ text: loc("1 adet muz", "1 banana") }],
   },
   {
     id: "meal-shake",
-    time: "Antrenman sonrası",
+    time: loc("Antrenman sonrası", "Post-workout"),
     timeShort: "16:30",
-    title: "Protein Shake",
+    title: loc("Protein Shake", "Protein Shake"),
     emoji: "🥤",
     items: [
       {
-        text: "1 ölçek whey protein (~30g toz)",
-        hint: "300 ml su veya yağsız süt ile",
+        text: loc(
+          "1 ölçek whey protein (~30g toz)",
+          "1 scoop whey protein (~30 g powder)",
+        ),
+        hint: loc(
+          "300 ml su veya yağsız süt ile",
+          "With 300 ml water or skim milk",
+        ),
       },
     ],
-    note: "Antrenman gününde: workout'tan 15–45 dk sonra. Dinlenme gününde aynı saatte al.",
+    note: loc(
+      "Antrenman gününde: workout'tan 15–45 dk sonra. Dinlenme gününde aynı saatte al.",
+      "Training day: 15–45 min after workout. Rest day: take at the same time.",
+    ),
   },
   {
     id: "meal-5",
-    time: "17–19",
+    time: loc("17–19", "17–19"),
     timeShort: "18:00",
-    title: "Akşam Yemeği",
+    title: loc("Akşam Yemeği", "Dinner"),
     emoji: "🥩",
     items: [
-      { text: "200 g hindi göğüs veya yağsız kıyma", hint: "Çiğ ölçüsü" },
       {
-        text: "125 g haşlanmış bulgur / greçka",
-        hint: "Çiğ ölçüsü",
+        text: loc(
+          "200 g hindi göğüs veya yağsız kıyma",
+          "200 g turkey breast or lean mince",
+        ),
+        hint: loc("Çiğ ölçüsü", "Raw weight"),
       },
-      { text: "Salata veya haşlanmış sebze" },
-      { text: "10 g zeytinyağı", hint: "Soğuk tüket" },
+      {
+        text: loc(
+          "125 g haşlanmış bulgur / greçka",
+          "125 g boiled bulgur / buckwheat",
+        ),
+        hint: loc("Çiğ ölçüsü", "Raw weight"),
+      },
+      {
+        text: loc(
+          "Salata veya haşlanmış sebze",
+          "Salad or steamed vegetables",
+        ),
+      },
+      {
+        text: loc("10 g zeytinyağı", "10 g olive oil"),
+        hint: loc("Soğuk tüket", "Use cold"),
+      },
     ],
   },
   {
     id: "meal-6",
-    time: "20–21",
+    time: loc("20–21", "20–21"),
     timeShort: "20:30",
-    title: "Gece Ara Öğün",
+    title: loc("Gece Ara Öğün", "Late-Night Snack"),
     emoji: "🐟",
     items: [
-      { text: "100 g balık / hindi göğüs / tavuk göğüs" },
       {
-        text: "10 g şekersiz fıstık ezmesi VEYA 5 ceviz VEYA 10 g zeytinyağı",
-        hint: "Birini seç",
+        text: loc(
+          "100 g balık / hindi göğüs / tavuk göğüs",
+          "100 g fish / turkey breast / chicken breast",
+        ),
+      },
+      {
+        text: loc(
+          "10 g şekersiz fıstık ezmesi VEYA 5 ceviz VEYA 10 g zeytinyağı",
+          "10 g unsweetened peanut butter OR 5 walnuts OR 10 g olive oil",
+        ),
+        hint: loc("Birini seç", "Pick one"),
       },
     ],
   },
 ];
 
-export const NUTRITION_RULES = [
-  { icon: "⚖️", text: "Öğünler çiğ ölçülerinden tartılmalıdır" },
-  { icon: "🧂", text: "Günlük 6 g tuz" },
-  { icon: "💧", text: "4.5 litre su" },
-  { icon: "🥩", text: "500 g protein kaynağı (200+200+100 g çiğ) + 1 shake" },
+export const NUTRITION_RULES: { icon: string; text: Localized<string> }[] = [
+  {
+    icon: "⚖️",
+    text: loc(
+      "Öğünler çiğ ölçülerinden tartılmalıdır",
+      "Weigh meal ingredients raw",
+    ),
+  },
+  { icon: "🧂", text: loc("Günlük 6 g tuz", "6 g salt per day") },
+  { icon: "💧", text: loc("4.5 litre su", "4.5 litres of water") },
+  {
+    icon: "🥩",
+    text: loc(
+      "500 g protein kaynağı (200+200+100 g çiğ) + 1 shake",
+      "500 g protein source (200+200+100 g raw) + 1 shake",
+    ),
+  },
 ];
 
 export const WATER_TARGET_LITERS = 4.5;
@@ -133,56 +210,61 @@ export const WATER_TOTAL_GLASSES = Math.round(
 // -------------------- MACRO REFERENCE --------------------
 
 export type MacroInfo = {
-  name: string;
+  name: Localized<string>;
   emoji: string;
-  unit: string; // e.g. "100 g çiğ", "1 ölçek"
+  unit: Localized<string>; // e.g. "100 g çiğ", "1 ölçek"
   kcal: number;
   protein: number; // g
   carbs: number; // g
   fat: number; // g
 };
 
+const UNIT_100G_RAW = loc("100 g çiğ", "100 g raw");
+
 export const PROTEIN_SOURCES: MacroInfo[] = [
   {
-    name: "Tavuk Göğsü",
+    name: loc("Tavuk Göğsü", "Chicken Breast"),
     emoji: "🍗",
-    unit: "100 g çiğ",
+    unit: UNIT_100G_RAW,
     kcal: 165,
     protein: 31,
     carbs: 0,
     fat: 3.6,
   },
   {
-    name: "Hindi Göğüs",
+    name: loc("Hindi Göğüs", "Turkey Breast"),
     emoji: "🦃",
-    unit: "100 g çiğ",
+    unit: UNIT_100G_RAW,
     kcal: 135,
     protein: 30,
     carbs: 0,
     fat: 1,
   },
   {
-    name: "Yağsız Kıyma (%5)",
+    name: loc("Yağsız Kıyma (%5)", "Lean Mince (5%)"),
     emoji: "🥩",
-    unit: "100 g çiğ",
+    unit: UNIT_100G_RAW,
     kcal: 137,
     protein: 21,
     carbs: 0,
     fat: 5,
   },
   {
-    name: "Beyaz Balık (Levrek/Çupra)",
+    name: loc(
+      "Beyaz Balık (Levrek/Çupra)",
+      "White Fish (Sea Bass/Bream)",
+    ),
     emoji: "🐟",
-    unit: "100 g çiğ",
+    unit: UNIT_100G_RAW,
     kcal: 96,
     protein: 20,
     carbs: 0,
     fat: 1.5,
   },
   {
-    name: "Somon",
+    name: loc("Somon", "Salmon"),
     emoji: "🍣",
-    unit: "100 g çiğ",
+    unit: UNIT_100G_RAW,
     kcal: 208,
     protein: 20,
     carbs: 0,
@@ -192,45 +274,45 @@ export const PROTEIN_SOURCES: MacroInfo[] = [
 
 export const CARB_SOURCES: MacroInfo[] = [
   {
-    name: "Basmati Pirinç",
+    name: loc("Basmati Pirinç", "Basmati Rice"),
     emoji: "🍚",
-    unit: "100 g çiğ",
+    unit: UNIT_100G_RAW,
     kcal: 355,
     protein: 7,
     carbs: 78,
     fat: 0.5,
   },
   {
-    name: "Makarna",
+    name: loc("Makarna", "Pasta"),
     emoji: "🍝",
-    unit: "100 g çiğ",
+    unit: UNIT_100G_RAW,
     kcal: 371,
     protein: 13,
     carbs: 74,
     fat: 1.5,
   },
   {
-    name: "Patates",
+    name: loc("Patates", "Potato"),
     emoji: "🥔",
-    unit: "100 g çiğ",
+    unit: UNIT_100G_RAW,
     kcal: 77,
     protein: 2,
     carbs: 17,
     fat: 0.1,
   },
   {
-    name: "Bulgur",
+    name: loc("Bulgur", "Bulgur"),
     emoji: "🌾",
-    unit: "100 g çiğ",
+    unit: UNIT_100G_RAW,
     kcal: 342,
     protein: 12,
     carbs: 76,
     fat: 1.3,
   },
   {
-    name: "Karabuğday (Greçka)",
+    name: loc("Karabuğday (Greçka)", "Buckwheat"),
     emoji: "🌰",
-    unit: "100 g çiğ",
+    unit: UNIT_100G_RAW,
     kcal: 343,
     protein: 13,
     carbs: 71,
@@ -239,9 +321,9 @@ export const CARB_SOURCES: MacroInfo[] = [
 ];
 
 export const PROTEIN_SHAKE: MacroInfo = {
-  name: "Whey Protein",
+  name: loc("Whey Protein", "Whey Protein"),
   emoji: "🥤",
-  unit: "1 ölçek (~30 g toz)",
+  unit: loc("1 ölçek (~30 g toz)", "1 scoop (~30 g powder)"),
   kcal: 120,
   protein: 24,
   carbs: 2,
@@ -252,93 +334,114 @@ export const PROTEIN_SHAKE: MacroInfo = {
 
 export type Scenario = {
   id: string;
-  name: string;
+  name: Localized<string>;
   emoji: string;
-  proteinSource: string;
-  carbSource: string;
+  proteinSource: Localized<string>;
+  carbSource: Localized<string>;
   kcal: number;
   protein: number;
   carbs: number;
   fat: number;
   highlight?: "high-protein" | "low-fat" | "balanced" | "low-cal";
-  note?: string;
+  note?: Localized<string>;
 };
 
-// Toplam ham protein kaynağı: 200 + 200 + 100 = 500 g çiğ et/tavuk/balık
+// Total raw protein source: 200 + 200 + 100 = 500 g raw meat/poultry/fish
 export const DAILY_PROTEIN_SOURCE_GRAMS = 500;
-// Toplam ham karbonhidrat: 40 + 125 = 165 g çiğ tahıl/nişasta
+// Total raw carbs: 40 + 125 = 165 g raw grains/starches
 export const DAILY_CARB_SOURCE_GRAMS = 165;
 
-// Sabit öğünler (senaryodan bağımsız):
-// Kahvaltı 3 yumurta + 3 kayısı  → 287 kcal, 19P, 20C, 15F
-// 20g badem                       → 116 kcal,  4P,  4C, 10F
-// 1 muz                           → 105 kcal,  1P, 27C,  0F
-// 20g zeytinyağı (öğle+akşam)     → 180 kcal,  0P,  0C, 20F
-// Salata × 2                      →  60 kcal,  2P, 10C,  0F
-// Gece yağ opsiyonu (10g PB)      →  60 kcal,  2.5P, 2C, 5F
-// Protein shake (1 ölçek whey)    → 120 kcal, 24P,  2C, 1.5F
-// = TOPLAM SABIT: 928 kcal, ~53P, 65C, ~52F
+// Fixed meals (scenario-independent):
+// Breakfast 3 eggs + 3 apricots  → 287 kcal, 19P, 20C, 15F
+// 20g almonds                     → 116 kcal,  4P,  4C, 10F
+// 1 banana                        → 105 kcal,  1P, 27C,  0F
+// 20g olive oil (lunch+dinner)    → 180 kcal,  0P,  0C, 20F
+// Salad × 2                       →  60 kcal,  2P, 10C,  0F
+// Late-night fat option (10g PB)  →  60 kcal,  2.5P, 2C, 5F
+// Protein shake (1 scoop whey)    → 120 kcal, 24P,  2C, 1.5F
+// = TOTAL FIXED: 928 kcal, ~53P, 65C, ~52F
 export const BASE_MEALS_MACROS = {
   kcal: 928,
   protein: 53,
   carbs: 65,
   fat: 52,
-  label: "Sabit öğünler",
-  note: "Kahvaltı, badem, muz, zeytinyağı, salatalar, gece yağı ve shake dahil.",
+  label: loc("Sabit öğünler", "Fixed meals"),
+  note: loc(
+    "Kahvaltı, badem, muz, zeytinyağı, salatalar, gece yağı ve shake dahil.",
+    "Includes breakfast, almonds, banana, olive oil, salads, late-night fat and shake.",
+  ),
 };
 
 export const SCENARIOS: Scenario[] = [
   {
     id: "sc-a",
-    name: "Tavuk + Pirinç",
+    name: loc("Tavuk + Pirinç", "Chicken + Rice"),
     emoji: "🍗",
-    proteinSource: "500 g tavuk göğsü",
-    carbSource: "165 g basmati pirinç",
+    proteinSource: loc("500 g tavuk göğsü", "500 g chicken breast"),
+    carbSource: loc("165 g basmati pirinç", "165 g basmati rice"),
     kcal: 2339,
     protein: 219,
     carbs: 194,
     fat: 70,
     highlight: "high-protein",
-    note: "En yüksek protein, en yağsız et seçimi. Standart bulking baz.",
+    note: loc(
+      "En yüksek protein, en yağsız et seçimi. Standart bulking baz.",
+      "Highest protein, leanest meat option. Standard bulking base.",
+    ),
   },
   {
     id: "sc-b",
-    name: "Kıyma + Makarna",
+    name: loc("Kıyma + Makarna", "Mince + Pasta"),
     emoji: "🥩",
-    proteinSource: "500 g yağsız kıyma (%5)",
-    carbSource: "165 g makarna",
+    proteinSource: loc("500 g yağsız kıyma (%5)", "500 g lean mince (5%)"),
+    carbSource: loc("165 g makarna", "165 g pasta"),
     kcal: 2225,
     protein: 179,
     carbs: 187,
     fat: 79,
     highlight: "balanced",
-    note: "Dengeli protein/yağ. Kıymadan gelen doğal yağ tokluk artırır.",
+    note: loc(
+      "Dengeli protein/yağ. Kıymadan gelen doğal yağ tokluk artırır.",
+      "Balanced protein/fat. Natural fat from mince improves satiety.",
+    ),
   },
   {
     id: "sc-c",
-    name: "Balık + Patates",
+    name: loc("Balık + Patates", "Fish + Potato"),
     emoji: "🐟",
-    proteinSource: "500 g beyaz balık",
-    carbSource: "165 g patates",
+    proteinSource: loc("500 g beyaz balık", "500 g white fish"),
+    carbSource: loc("165 g patates", "165 g potato"),
     kcal: 1535,
     protein: 156,
     carbs: 93,
     fat: 59,
     highlight: "low-cal",
-    note: "Kalorisi düşük, cutting/deficit için. Aynı karbonhidrat için ~750 g patates gerekir.",
+    note: loc(
+      "Kalorisi düşük, cutting/deficit için. Aynı karbonhidrat için ~750 g patates gerekir.",
+      "Low calorie, for cutting/deficit. ~750 g potato needed for the same carbs.",
+    ),
   },
   {
     id: "sc-d",
-    name: "Karma (Orijinal)",
+    name: loc("Karma (Orijinal)", "Mixed (Original)"),
     emoji: "🍽️",
-    proteinSource: "200 g tavuk + 200 g hindi + 100 g balık",
-    carbSource: "40 g basmati + 125 g bulgur",
+    proteinSource: loc(
+      "200 g tavuk + 200 g hindi + 100 g balık",
+      "200 g chicken + 200 g turkey + 100 g fish",
+    ),
+    carbSource: loc(
+      "40 g basmati + 125 g bulgur",
+      "40 g basmati + 125 g bulgur",
+    ),
     kcal: 2194,
     protein: 212,
     carbs: 191,
     fat: 64,
     highlight: "balanced",
-    note: "Orijinal plan. Protein çeşitliliği yüksek, mikronütrient dağılımı iyi.",
+    note: loc(
+      "Orijinal plan. Protein çeşitliliği yüksek, mikronütrient dağılımı iyi.",
+      "Original plan. High protein variety, good micronutrient spread.",
+    ),
   },
 ];
 
@@ -390,7 +493,7 @@ export function getMealMacros(
 }
 
 // -------------------- PER-ITEM KCAL --------------------
-// Item sırası NUTRITION_PLAN'daki her meal.items dizisiyle birebir eşleşir.
+// Item order matches each meal.items array in NUTRITION_PLAN 1:1.
 
 const FIXED_ITEM_KCALS: Record<string, number[]> = {
   "meal-0": [5],

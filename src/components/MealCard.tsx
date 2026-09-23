@@ -1,6 +1,7 @@
 import { CheckIcon } from "./Icon";
 import { MacroChip } from "./MacroChip";
 import type { Meal, MacroData } from "../data/nutrition";
+import { l, t, useLang } from "../lib/i18n";
 
 type Props = {
   meal: Meal;
@@ -19,6 +20,7 @@ export function MealCard({
   macros,
   itemKcals,
 }: Props) {
+  const [lang] = useLang();
   const doneCount = completed.filter(Boolean).length;
   const total = meal.items.length;
   const allDone = doneCount === total && total > 0;
@@ -52,11 +54,11 @@ export function MealCard({
                 {meal.timeShort}
               </span>
               <span className="truncate text-[11px] text-[var(--color-text-mute)]">
-                {meal.time}
+                {l(meal.time, lang)}
               </span>
             </div>
             <h3 className="text-[15px] font-semibold leading-tight text-[var(--color-text)]">
-              {meal.title}
+              {l(meal.title, lang)}
             </h3>
           </div>
         </div>
@@ -64,7 +66,7 @@ export function MealCard({
           type="button"
           onClick={onToggleAll}
           aria-pressed={allDone}
-          aria-label={allDone ? "Öğünü sıfırla" : "Öğünü tamamla"}
+          aria-label={allDone ? t("mealResetAria", lang) : t("mealCompleteAria", lang)}
           className={`
             flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all duration-150
             active:scale-95
@@ -134,11 +136,11 @@ export function MealCard({
                       }
                     `}
                   >
-                    {item.text}
+                    {l(item.text, lang)}
                   </p>
                   {item.hint && (
                     <p className="mt-0.5 text-xs text-[var(--color-text-mute)]">
-                      {item.hint}
+                      {l(item.hint, lang)}
                     </p>
                   )}
                 </div>
@@ -165,7 +167,7 @@ export function MealCard({
 
       {meal.note && (
         <p className="mt-3 rounded-lg bg-[var(--color-surface-2)] px-3 py-2 text-xs italic text-[var(--color-text-dim)]">
-          {meal.note}
+          {l(meal.note, lang)}
         </p>
       )}
     </article>

@@ -1,4 +1,5 @@
 import type { MacroData } from "../data/nutrition";
+import { t, useLang } from "../lib/i18n";
 
 type Props = {
   data: MacroData;
@@ -7,6 +8,7 @@ type Props = {
 };
 
 export function MacroChip({ data, showKcal = true, size = "sm" }: Props) {
+  const [lang] = useLang();
   const padX = size === "md" ? "px-2.5" : "px-2";
   const padY = size === "md" ? "py-1.5" : "py-1";
   const textNum = size === "md" ? "text-xs" : "text-[11px]";
@@ -26,7 +28,7 @@ export function MacroChip({ data, showKcal = true, size = "sm" }: Props) {
           <span
             className={`font-medium uppercase tracking-wider text-[var(--color-accent)]/70 ${textUnit}`}
           >
-            kcal
+            {t("macroKcal", lang)}
           </span>
         </div>
       )}
@@ -39,7 +41,7 @@ export function MacroChip({ data, showKcal = true, size = "sm" }: Props) {
         <span
           className={`font-medium uppercase tracking-wider text-[var(--color-success)]/70 ${textUnit}`}
         >
-          gP
+          {t("macroGP", lang)}
         </span>
       </div>
       <div
@@ -51,7 +53,7 @@ export function MacroChip({ data, showKcal = true, size = "sm" }: Props) {
         <span
           className={`font-medium uppercase tracking-wider text-[var(--color-water)]/70 ${textUnit}`}
         >
-          gC
+          {t("macroGC", lang)}
         </span>
       </div>
       <div
@@ -63,7 +65,7 @@ export function MacroChip({ data, showKcal = true, size = "sm" }: Props) {
         <span
           className={`font-medium uppercase tracking-wider text-[var(--color-fat)]/70 ${textUnit}`}
         >
-          gY
+          {t("macroGY", lang)}
         </span>
       </div>
     </div>

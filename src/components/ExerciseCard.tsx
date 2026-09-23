@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { CheckIcon } from "./Icon";
 import { getExerciseGifUrl, type Exercise } from "../data/workouts";
+import { l, t, useLang, type UIKey } from "../lib/i18n";
 
 type Props = {
   exercise: Exercise;
@@ -9,24 +10,24 @@ type Props = {
   index: number;
 };
 
-const TAG_STYLE: Record<
+const TAG_META: Record<
   NonNullable<Exercise["tag"]>,
-  { label: string; className: string }
+  { labelKey: UIKey; className: string }
 > = {
   "BIG 3": {
-    label: "BIG 3",
+    labelKey: "tagBig3",
     className: "bg-[var(--color-accent-glow)] text-[var(--color-accent)]",
   },
   SUPERSET: {
-    label: "SUPERSET",
+    labelKey: "tagSuperset",
     className: "bg-[var(--color-rest)]/15 text-[var(--color-rest)]",
   },
   ISINMA: {
-    label: "ISINMA",
+    labelKey: "tagWarmup",
     className: "bg-[var(--color-water-glow)] text-[var(--color-water)]",
   },
   FINISHER: {
-    label: "FINISHER",
+    labelKey: "tagFinisher",
     className: "bg-[var(--color-success-glow)] text-[var(--color-success)]",
   },
 };
@@ -37,12 +38,14 @@ export function ExerciseCard({
   onToggleSet,
   index,
 }: Props) {
+  const [lang] = useLang();
   const [imgError, setImgError] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
   const doneCount = completed.filter(Boolean).length;
   const allDone = doneCount === exercise.sets && exercise.sets > 0;
-  const tag = exercise.tag ? TAG_STYLE[exercise.tag] : null;
+  const tag = exercise.tag ? TAG_META[exercise.tag] : null;
   const imageUrl = getExerciseGifUrl(exercise.id);
+  const cues = exercise.cues ? l(exercise.cues, lang) : undefined;
 
   return (
     <article
@@ -83,7 +86,7 @@ export function ExerciseCard({
                 <span
                   className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold tracking-wider ${tag.className}`}
                 >
-                  {tag.label}
+                  {t(tag.labelKey, lang)}
                 </span>
               )}
             </div>
@@ -98,21 +101,25 @@ export function ExerciseCard({
               {exercise.sets}
             </span>
             <span className="text-[10px] font-medium text-[var(--color-text-mute)]">
-              SET
+              {t("setUnit", lang)}
             </span>
           </div>
         </header>
 
         <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
           <span className="text-[var(--color-text-dim)]">
-            <span className="text-[var(--color-text-mute)]">Tekrar:</span>{" "}
+            <span className="text-[var(--color-text-mute)]">
+              {t("reps", lang)}:
+            </span>{" "}
             <span className="font-semibold text-[var(--color-text)]">
               {exercise.reps}
             </span>
           </span>
           {exercise.rpe && (
             <span className="text-[var(--color-text-dim)]">
-              <span className="text-[var(--color-text-mute)]">Şiddet:</span>{" "}
+              <span className="text-[var(--color-text-mute)]">
+                {t("intensity", lang)}:
+              </span>{" "}
               <span className="font-semibold text-[var(--color-text)]">
                 {exercise.rpe}
               </span>
@@ -120,9 +127,9 @@ export function ExerciseCard({
           )}
         </div>
 
-        {exercise.cues && exercise.cues.length > 0 && (
+        {cues && cues.length > 0 && (
           <ul className="mt-2 space-y-1">
-            {exercise.cues.map((cue, i) => (
+            {cues.map((cue, i) => (
               <li
                 key={i}
                 className="text-xs leading-relaxed text-[var(--color-text-dim)]"
@@ -136,7 +143,7 @@ export function ExerciseCard({
         <div className="mt-4">
           <div className="mb-2 flex items-center justify-between">
             <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--color-text-mute)]">
-              Setler
+              {t("setsHeading", lang)}
             </span>
             <span className="text-xs font-semibold tabular-nums text-[var(--color-text-dim)]">
               {doneCount} / {exercise.sets}
@@ -151,7 +158,7 @@ export function ExerciseCard({
                   type="button"
                   onClick={() => onToggleSet(i)}
                   aria-pressed={done}
-                  aria-label={`Set ${i + 1}`}
+                  aria-label={`${t("setAria", lang)} ${i + 1}`}
                   className={`
                     relative flex h-12 w-12 items-center justify-center rounded-xl
                     text-base font-bold tabular-nums transition-all duration-150

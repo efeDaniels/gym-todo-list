@@ -1,4 +1,5 @@
 import { AppleIcon, DumbbellIcon, TodayIcon } from "./Icon";
+import { t, useLang, type UIKey } from "../lib/i18n";
 
 export type Tab = "today" | "workout" | "nutrition";
 
@@ -9,23 +10,24 @@ type Props = {
 
 const TABS: {
   key: Tab;
-  label: string;
+  labelKey: UIKey;
   Icon: typeof TodayIcon;
 }[] = [
-  { key: "today", label: "Bugün", Icon: TodayIcon },
-  { key: "workout", label: "Antrenman", Icon: DumbbellIcon },
-  { key: "nutrition", label: "Beslenme", Icon: AppleIcon },
+  { key: "today", labelKey: "navToday", Icon: TodayIcon },
+  { key: "workout", labelKey: "navWorkout", Icon: DumbbellIcon },
+  { key: "nutrition", labelKey: "navNutrition", Icon: AppleIcon },
 ];
 
 export function BottomNav({ tab, onChange }: Props) {
+  const [lang] = useLang();
   return (
     <nav
       className="fixed inset-x-0 bottom-0 z-40 mx-auto flex max-w-[720px] justify-center"
-      aria-label="Ana navigasyon"
+      aria-label={t("navAria", lang)}
     >
       <div className="nav-safe-bottom w-full border-t border-[var(--color-border)] bg-[var(--color-bg)]/95 px-2 pt-1.5 backdrop-blur-md">
         <div className="flex items-stretch justify-between gap-1">
-          {TABS.map(({ key, label, Icon }) => {
+          {TABS.map(({ key, labelKey, Icon }) => {
             const active = tab === key;
             return (
               <button
@@ -43,7 +45,7 @@ export function BottomNav({ tab, onChange }: Props) {
                 <span
                   className={`text-[11px] font-semibold ${active ? "" : "font-medium"}`}
                 >
-                  {label}
+                  {t(labelKey, lang)}
                 </span>
                 {active && (
                   <span

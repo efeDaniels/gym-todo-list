@@ -1,3 +1,5 @@
+import { loc, type Localized } from "../lib/i18n";
+
 export type DayKey =
   | "pazartesi"
   | "sali"
@@ -9,40 +11,49 @@ export type DayKey =
 
 export type Exercise = {
   id: string;
-  name: string;
+  name: string; // gym terms already in English — kept identical across locales
   sets: number;
   reps: string;
   rpe?: string;
-  note?: string;
+  note?: Localized<string>;
   tag?: "BIG 3" | "SUPERSET" | "ISINMA" | "FINISHER";
-  cues?: string[];
+  cues?: Localized<string[]>;
 };
 
 export type WorkoutDay = {
   key: DayKey;
-  dayShort: string;
-  dayLong: string;
+  dayShort: Localized<string>;
+  dayLong: Localized<string>;
   title: string | null;
-  subtitle: string | null;
-  focus: string[];
+  subtitle: Localized<string> | null;
+  focus: Localized<string[]>;
   exercises: Exercise[];
   isRest: boolean;
-  restNote?: string;
+  restNote?: Localized<string>;
 };
 
-// Guray's Hypertrophy Max — kaynak: TikTok @xosrovazari
+// Guray's Hypertrophy Max — source: TikTok @xosrovazari
 // Pzt/Cum: PUSH  ·  Sal/Cmt: PULL  ·  Çar: LEGS  ·  Prş/Paz: REST
-// Not: "*2 Antrenman Sonunda: 3x10 Cable Crunch / 3x10 Standing Calf Raise"
-// → Sal (2. antrenman sonu) ve Cum (4. antrenman sonu) FINISHER olarak eklendi.
+// Note: "*2 Antrenman Sonunda: 3x10 Cable Crunch / 3x10 Standing Calf Raise"
+// → Added as FINISHER on Sal (2nd session end) and Cum (4th session end).
+
+const CUE_NO_REST_BETWEEN = loc(["Arada dinlenme yok"], ["No rest between"]);
+const CUE_EVERY_OTHER_WORKOUT = loc(
+  ["Her 2 antrenmanda bir"],
+  ["Every other workout"],
+);
 
 export const WORKOUT_PROGRAM: WorkoutDay[] = [
   {
     key: "pazartesi",
-    dayShort: "Pzt",
-    dayLong: "Pazartesi",
+    dayShort: loc("Pzt", "Mon"),
+    dayLong: loc("Pazartesi", "Monday"),
     title: "PUSH",
-    subtitle: "Göğüs · Omuz · Triceps",
-    focus: ["Göğüs", "Omuz", "Triceps"],
+    subtitle: loc("Göğüs · Omuz · Triceps", "Chest · Shoulders · Triceps"),
+    focus: loc(
+      ["Göğüs", "Omuz", "Triceps"],
+      ["Chest", "Shoulders", "Triceps"],
+    ),
     isRest: false,
     exercises: [
       {
@@ -98,11 +109,11 @@ export const WORKOUT_PROGRAM: WorkoutDay[] = [
   },
   {
     key: "sali",
-    dayShort: "Sal",
-    dayLong: "Salı",
+    dayShort: loc("Sal", "Tue"),
+    dayLong: loc("Salı", "Tuesday"),
     title: "PULL",
-    subtitle: "Sırt · Bicep",
-    focus: ["Sırt", "Bicep"],
+    subtitle: loc("Sırt · Bicep", "Back · Biceps"),
+    focus: loc(["Sırt", "Bicep"], ["Back", "Biceps"]),
     isRest: false,
     exercises: [
       {
@@ -147,7 +158,7 @@ export const WORKOUT_PROGRAM: WorkoutDay[] = [
         reps: "8–10 + 8–10",
         rpe: "Failure",
         tag: "SUPERSET",
-        cues: ["Arada dinlenme yok"],
+        cues: CUE_NO_REST_BETWEEN,
       },
       {
         id: "sal-f1",
@@ -155,7 +166,7 @@ export const WORKOUT_PROGRAM: WorkoutDay[] = [
         sets: 3,
         reps: "10",
         tag: "FINISHER",
-        cues: ["Her 2 antrenmanda bir"],
+        cues: CUE_EVERY_OTHER_WORKOUT,
       },
       {
         id: "sal-f2",
@@ -163,17 +174,17 @@ export const WORKOUT_PROGRAM: WorkoutDay[] = [
         sets: 3,
         reps: "10",
         tag: "FINISHER",
-        cues: ["Her 2 antrenmanda bir"],
+        cues: CUE_EVERY_OTHER_WORKOUT,
       },
     ],
   },
   {
     key: "carsamba",
-    dayShort: "Çar",
-    dayLong: "Çarşamba",
+    dayShort: loc("Çar", "Wed"),
+    dayLong: loc("Çarşamba", "Wednesday"),
     title: "LEGS",
-    subtitle: "Quad · Hamstring",
-    focus: ["Quad", "Hamstring"],
+    subtitle: loc("Quad · Hamstring", "Quads · Hamstrings"),
+    focus: loc(["Quad", "Hamstring"], ["Quads", "Hamstrings"]),
     isRest: false,
     exercises: [
       {
@@ -208,23 +219,28 @@ export const WORKOUT_PROGRAM: WorkoutDay[] = [
   },
   {
     key: "persembe",
-    dayShort: "Prş",
-    dayLong: "Perşembe",
+    dayShort: loc("Prş", "Thu"),
+    dayLong: loc("Perşembe", "Thursday"),
     title: null,
     subtitle: null,
-    focus: [],
+    focus: loc([], []),
     isRest: true,
-    restNote:
+    restNote: loc(
       "Dinlenme günü. Çar LEGS sonrası toparlanma, Cum PUSH öncesi hazırlık.",
+      "Rest day. Recovery after Wed LEGS, prep before Fri PUSH.",
+    ),
     exercises: [],
   },
   {
     key: "cuma",
-    dayShort: "Cum",
-    dayLong: "Cuma",
+    dayShort: loc("Cum", "Fri"),
+    dayLong: loc("Cuma", "Friday"),
     title: "PUSH",
-    subtitle: "Omuz · Göğüs · Triceps",
-    focus: ["Omuz", "Göğüs", "Triceps"],
+    subtitle: loc("Omuz · Göğüs · Triceps", "Shoulders · Chest · Triceps"),
+    focus: loc(
+      ["Omuz", "Göğüs", "Triceps"],
+      ["Shoulders", "Chest", "Triceps"],
+    ),
     isRest: false,
     exercises: [
       {
@@ -282,7 +298,7 @@ export const WORKOUT_PROGRAM: WorkoutDay[] = [
         sets: 3,
         reps: "10",
         tag: "FINISHER",
-        cues: ["Her 2 antrenmanda bir"],
+        cues: CUE_EVERY_OTHER_WORKOUT,
       },
       {
         id: "cum-f2",
@@ -290,17 +306,23 @@ export const WORKOUT_PROGRAM: WorkoutDay[] = [
         sets: 3,
         reps: "10",
         tag: "FINISHER",
-        cues: ["Her 2 antrenmanda bir"],
+        cues: CUE_EVERY_OTHER_WORKOUT,
       },
     ],
   },
   {
     key: "cumartesi",
-    dayShort: "Cmt",
-    dayLong: "Cumartesi",
+    dayShort: loc("Cmt", "Sat"),
+    dayLong: loc("Cumartesi", "Saturday"),
     title: "PULL",
-    subtitle: "Sırt · Bicep · Bacak Arka",
-    focus: ["Sırt", "Bicep", "Hamstring"],
+    subtitle: loc(
+      "Sırt · Bicep · Bacak Arka",
+      "Back · Biceps · Hamstrings",
+    ),
+    focus: loc(
+      ["Sırt", "Bicep", "Hamstring"],
+      ["Back", "Biceps", "Hamstrings"],
+    ),
     isRest: false,
     exercises: [
       {
@@ -338,7 +360,7 @@ export const WORKOUT_PROGRAM: WorkoutDay[] = [
         reps: "8–10 + 8–10",
         rpe: "Failure",
         tag: "SUPERSET",
-        cues: ["Arada dinlenme yok"],
+        cues: CUE_NO_REST_BETWEEN,
       },
       {
         id: "cmt-6",
@@ -358,14 +380,16 @@ export const WORKOUT_PROGRAM: WorkoutDay[] = [
   },
   {
     key: "pazar",
-    dayShort: "Paz",
-    dayLong: "Pazar",
+    dayShort: loc("Paz", "Sun"),
+    dayLong: loc("Pazar", "Sunday"),
     title: null,
     subtitle: null,
-    focus: [],
+    focus: loc([], []),
     isRest: true,
-    restNote:
+    restNote: loc(
       "Dinlenme günü. Cmt PULL sonrası tam toparlanma, Pzt PUSH öncesi hazırlık.",
+      "Rest day. Full recovery after Sat PULL, prep before Mon PUSH.",
+    ),
     exercises: [],
   },
 ];
@@ -402,8 +426,8 @@ export function getTodayKey(date: Date = new Date()): DayKey {
 }
 
 // -------------------- EXERCISE GIFS --------------------
-// Kaynak: https://github.com/JahelCuadrado/ExerciseGymGifsDB (360×360 GIF, jsDelivr).
-// Sabit sürüm (v1.1.0) ile cache-safe hotlink.
+// Source: https://github.com/JahelCuadrado/ExerciseGymGifsDB (360×360 GIF, jsDelivr).
+// Pinned version (v1.1.0) for cache-safe hotlink.
 
 const EXERCISE_GIF_BASE =
   "https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0";
@@ -434,7 +458,7 @@ const EXERCISE_GIF_SLUGS: Record<string, string> = {
   "car-3": "quads/lever-leg-extension.gif",
   "car-4": "hamstrings/lever-seated-leg-curl.gif",
 
-  // CUMA — PUSH (omuz odaklı)
+  // CUMA — PUSH (shoulder-focused)
   "cum-1": "delts/lever-shoulder-press.gif",
   "cum-2": "delts/dumbbell-lateral-raise.gif",
   "cum-3": "pectorals/smith-incline-bench-press.gif",
@@ -445,7 +469,7 @@ const EXERCISE_GIF_SLUGS: Record<string, string> = {
   "cum-f1": "abs/cable-kneeling-crunch.gif",
   "cum-f2": "calves/lever-standing-calf-raise.gif",
 
-  // CUMARTESİ — PULL (sırt + hamstring)
+  // CUMARTESİ — PULL (back + hamstring)
   "cmt-1": "upper-back/lever-t-bar-row.gif",
   "cmt-2": "lats/cable-pulldown.gif",
   "cmt-3": "glutes/barbell-romanian-deadlift.gif",

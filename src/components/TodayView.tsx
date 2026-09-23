@@ -30,6 +30,7 @@ import {
   useWorkoutDayState,
 } from "../lib/hooks";
 import { usePersistentState } from "../lib/storage";
+import { l, t, useLang, type Lang } from "../lib/i18n";
 import type { Tab } from "./BottomNav";
 
 type Props = {
@@ -37,6 +38,7 @@ type Props = {
 };
 
 export function TodayView({ onNavigate }: Props) {
+  const [lang] = useLang();
   const todayKey: DayKey = getTodayKey();
   const day = getDayByKey(todayKey);
   const workout = useWorkoutDayState(todayKey, day);
@@ -56,17 +58,22 @@ export function TodayView({ onNavigate }: Props) {
   const kcalPct = Math.min(consumedKcal / selectedScenario.kcal, 1);
 
   const now = useMemo(() => new Date(), []);
-  const dateLabel = formatDateLong(now);
+  const dateLabel = formatDateLong(now, lang);
+  const scenarioName = l(selectedScenario.name, lang);
+
+  const heroTitle = day.isRest
+    ? t("navToday", lang)
+    : day.title ?? t("navToday", lang);
 
   return (
     <div className="flex flex-1 flex-col px-4">
       <TopBar
-        title={day.isRest ? "Bugün" : `${day.title ?? "Bugün"}`}
-        subtitle={`${day.dayLong} · ${dateLabel}`}
+        title={heroTitle}
+        subtitle={`${l(day.dayLong, lang)} · ${dateLabel}`}
       />
 
       {/* Week overview strip */}
-      <WeekStrip todayKey={todayKey} onNavigate={onNavigate} />
+      <WeekStrip todayKey={todayKey} onNavigate={onNavigate} lang={lang} />
 
       {/* Hero summary — two rings */}
       <section className="mt-4 rounded-2xl border border-[var(--color-border)] bg-gradient-to-br from-[var(--color-surface)] to-[var(--color-surface-2)] p-4">
@@ -75,14 +82,14 @@ export function TodayView({ onNavigate }: Props) {
             type="button"
             onClick={() => onNavigate("workout")}
             className="flex flex-col items-center gap-1.5 rounded-xl px-2 py-1 transition-transform active:scale-95"
-            aria-label="Antrenmana git"
+            aria-label={t("goToWorkout", lang)}
           >
             {day.isRest ? (
               <ProgressRing
                 value={1}
                 color="var(--color-rest)"
                 label=""
-                sublabel="Dinlenme"
+                sublabel={t("restLabel", lang)}
                 size={92}
               />
             ) : (
@@ -90,7 +97,7 @@ export function TodayView({ onNavigate }: Props) {
                 value={workout.summary.pct}
                 color="var(--color-accent)"
                 label={`${workout.summary.done}/${workout.summary.total}`}
-                sublabel="SET"
+                sublabel={t("setUnit", lang)}
                 size={92}
               />
             )}
@@ -103,7 +110,7 @@ export function TodayView({ onNavigate }: Props) {
                   className="text-[var(--color-accent)]"
                 />
               )}
-              <span>Antrenman</span>
+              <span>{t("ringWorkoutLabel", lang)}</span>
             </div>
           </button>
 
@@ -113,19 +120,20 @@ export function TodayView({ onNavigate }: Props) {
             type="button"
             onClick={() => onNavigate("nutrition")}
             className="flex flex-col items-center gap-1.5 rounded-xl px-2 py-1 transition-transform active:scale-95"
-            aria-label="Beslenmeye git"
+            aria-label={t("goToNutrition", lang)}
           >
             <ProgressRing
               value={kcalPct}
               color="var(--color-success)"
               label={`${consumedKcal}`}
-              sublabel="KCAL"
+              sublabel={t("kcalUnit", lang)}
               size={92}
             />
             <div className="flex items-center gap-1.5 text-xs font-semibold text-[var(--color-text-dim)]">
               <AppleIcon size={14} className="text-[var(--color-success)]" />
               <span>
-                Beslenme · {nutrition.mealsDone}/{nutrition.mealsTotal}
+                {t("ringNutritionLabel", lang)} · {nutrition.mealsDone}/
+                {nutrition.mealsTotal}
               </span>
             </div>
           </button>
@@ -142,7 +150,7 @@ export function TodayView({ onNavigate }: Props) {
         <div className="mb-3 flex items-center gap-2 px-1">
           <DumbbellIcon size={16} className="text-[var(--color-accent)]" />
           <h2 className="text-[13px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
-            Bugünün Antrenmanı
+            {t("todayWorkoutHeading", lang)}
           </h2>
         </div>
         <WorkoutDaySection dayKey={todayKey} day={day} showTitle={false} />
@@ -154,14 +162,14 @@ export function TodayView({ onNavigate }: Props) {
           <div className="flex items-center gap-2">
             <AppleIcon size={16} className="text-[var(--color-success)]" />
             <h2 className="text-[13px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
-              Bugünün Beslenmesi
+              {t("todayNutritionHeading", lang)}
             </h2>
           </div>
           <button
             type="button"
             onClick={() => onNavigate("nutrition")}
             className="flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-2.5 py-1 text-[11px] font-semibold text-[var(--color-text-dim)] transition-all active:scale-95"
-            aria-label={`Senaryo: ${selectedScenario.name}, değiştir`}
+            aria-label={`${t("scenarioAria", lang)}: ${scenarioName}, ${t("scenarioChangeSuffix", lang)}`}
           >
             <span className="text-sm">{selectedScenario.emoji}</span>
             <span className="tabular-nums">
@@ -194,14 +202,25 @@ export function TodayView({ onNavigate }: Props) {
 
 // -------------------- Week strip --------------------
 
-const DAY_INITIAL: Record<DayKey, string> = {
-  pazartesi: "P",
-  sali: "S",
-  carsamba: "Ç",
-  persembe: "P",
-  cuma: "C",
-  cumartesi: "C",
-  pazar: "P",
+const DAY_INITIAL: Record<Lang, Record<DayKey, string>> = {
+  tr: {
+    pazartesi: "P",
+    sali: "S",
+    carsamba: "Ç",
+    persembe: "P",
+    cuma: "C",
+    cumartesi: "C",
+    pazar: "P",
+  },
+  en: {
+    pazartesi: "M",
+    sali: "T",
+    carsamba: "W",
+    persembe: "T",
+    cuma: "F",
+    cumartesi: "S",
+    pazar: "S",
+  },
 };
 
 const AMBIGUOUS_TITLE_GLYPH: Record<string, string> = {
@@ -212,9 +231,10 @@ const AMBIGUOUS_TITLE_GLYPH: Record<string, string> = {
 type WeekStripProps = {
   todayKey: DayKey;
   onNavigate: (tab: Tab) => void;
+  lang: Lang;
 };
 
-function WeekStrip({ todayKey, onNavigate }: WeekStripProps) {
+function WeekStrip({ todayKey, onNavigate, lang }: WeekStripProps) {
   return (
     <div className="mt-3 flex gap-1 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-1.5">
       {DAY_ORDER.map((k) => {
@@ -225,13 +245,14 @@ function WeekStrip({ todayKey, onNavigate }: WeekStripProps) {
           : (d.title ? AMBIGUOUS_TITLE_GLYPH[d.title] : undefined) ??
             d.title?.charAt(0) ??
             "•";
+        const dayLong = l(d.dayLong, lang);
         return (
           <button
             key={k}
             type="button"
             onClick={() => onNavigate("workout")}
             aria-current={isToday ? "date" : undefined}
-            aria-label={`${d.dayLong}${d.isRest ? " - Dinlenme" : ` - ${d.title}`}`}
+            aria-label={`${dayLong}${d.isRest ? ` - ${t("restLabel", lang)}` : ` - ${d.title ?? ""}`}`}
             className={`
               relative flex flex-1 flex-col items-center justify-center gap-0.5 rounded-xl py-1.5
               transition-all duration-150 active:scale-95
@@ -249,7 +270,7 @@ function WeekStrip({ todayKey, onNavigate }: WeekStripProps) {
                   : "text-[var(--color-text-mute)]"
               }`}
             >
-              {DAY_INITIAL[k]}
+              {DAY_INITIAL[lang][k]}
             </span>
             {labelChar ? (
               <span

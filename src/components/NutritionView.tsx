@@ -18,8 +18,10 @@ import {
 } from "../data/nutrition";
 import { useNutritionState, useWater } from "../lib/hooks";
 import { usePersistentState } from "../lib/storage";
+import { l, t, useLang, type Lang, type UIKey } from "../lib/i18n";
 
 export function NutritionView() {
+  const [lang] = useLang();
   const nutrition = useNutritionState();
   const water = useWater();
   const [selectedScenarioId, setSelectedScenarioId] =
@@ -34,11 +36,7 @@ export function NutritionView() {
   const kcalPct = Math.min(consumedKcal / selectedScenario.kcal, 1);
 
   const handleReset = () => {
-    if (
-      window.confirm(
-        "Bugünkü tüm öğün ve su ilerlemesini sıfırlamak istiyor musun?",
-      )
-    ) {
+    if (window.confirm(t("nutritionResetConfirm", lang))) {
       nutrition.resetAll();
       water.reset();
     }
@@ -47,8 +45,8 @@ export function NutritionView() {
   return (
     <div className="flex flex-1 flex-col px-4">
       <TopBar
-        title="Beslenme"
-        subtitle={`${nutrition.mealsDone} / ${nutrition.mealsTotal} öğün · ${selectedScenario.kcal} kcal hedef`}
+        title={t("nutritionTitle", lang)}
+        subtitle={`${nutrition.mealsDone} / ${nutrition.mealsTotal} ${t("nutritionSubtitleMealsWord", lang)} · ${selectedScenario.kcal} kcal ${t("nutritionSubtitleTargetWord", lang)}`}
         onReset={handleReset}
       />
 
@@ -57,7 +55,7 @@ export function NutritionView() {
         <div className="flex items-end justify-between gap-3">
           <div className="min-w-0">
             <div className="text-[11px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
-              Alınan Kalori
+              {t("consumedKcal", lang)}
             </div>
             <div className="mt-1 flex items-baseline gap-1.5">
               <span className="text-3xl font-extrabold tabular-nums text-[var(--color-accent)]">
@@ -75,7 +73,7 @@ export function NutritionView() {
               </span>
               <span className="text-[var(--color-text-mute)]">
                 {" "}
-                / {nutrition.mealsTotal} öğün
+                / {nutrition.mealsTotal} {t("nutritionSubtitleMealsWord", lang)}
               </span>
             </div>
             <div>
@@ -84,14 +82,16 @@ export function NutritionView() {
               </span>
               <span className="text-[var(--color-text-mute)]">
                 {" "}
-                / {nutrition.summary.total} kalem
+                / {nutrition.summary.total} {t("itemsWord", lang)}
               </span>
             </div>
             <div>
               <span className="font-semibold text-[var(--color-text)]">
                 {Math.round(kcalPct * 100)}
               </span>
-              <span className="text-[var(--color-text-mute)]">% hedef</span>
+              <span className="text-[var(--color-text-mute)]">
+                {t("percentTarget", lang)}
+              </span>
             </div>
           </div>
         </div>
@@ -101,12 +101,12 @@ export function NutritionView() {
           <div className="mb-2 flex items-center justify-between">
             <div className="min-w-0 flex-1">
               <div className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
-                Bugünkü Hedef
+                {t("todayTarget", lang)}
               </div>
               <div className="mt-0.5 flex items-center gap-1.5">
                 <span className="text-base">{selectedScenario.emoji}</span>
                 <span className="truncate text-sm font-semibold text-[var(--color-text)]">
-                  {selectedScenario.name}
+                  {l(selectedScenario.name, lang)}
                 </span>
               </div>
             </div>
@@ -124,10 +124,10 @@ export function NutritionView() {
       <div className="mt-5">
         <div className="mb-2 flex items-baseline justify-between px-1">
           <h2 className="text-[13px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
-            Senaryolar
+            {t("scenariosHeading", lang)}
           </h2>
           <span className="text-[10px] text-[var(--color-text-mute)]">
-            500 g protein + 165 g karb + shake
+            {t("scenariosSummary", lang)}
           </span>
         </div>
         <div className="space-y-2">
@@ -137,6 +137,7 @@ export function NutritionView() {
               scenario={s}
               selected={selectedScenarioId === s.id}
               onSelect={() => setSelectedScenarioId(s.id)}
+              lang={lang}
             />
           ))}
         </div>
@@ -146,7 +147,7 @@ export function NutritionView() {
       <div className="mt-5">
         <div className="mb-2 flex items-baseline justify-between px-1">
           <h2 className="text-[13px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
-            Öğün Zaman Çizelgesi
+            {t("mealTimeline", lang)}
           </h2>
         </div>
         <div className="space-y-3">
@@ -169,22 +170,25 @@ export function NutritionView() {
       {/* Macro reference tables */}
       <div className="mt-5 space-y-3">
         <MacroReference
-          title="Protein Kaynakları"
-          subtitle="Ortalama makrolar (100 g çiğ)"
+          title={t("proteinSourcesHeading", lang)}
+          subtitle={t("averageMacros", lang)}
           items={PROTEIN_SOURCES}
           accent="var(--color-success)"
+          lang={lang}
         />
         <MacroReference
-          title="Karbonhidrat Kaynakları"
-          subtitle="Ortalama makrolar (100 g çiğ)"
+          title={t("carbSourcesHeading", lang)}
+          subtitle={t("averageMacros", lang)}
           items={CARB_SOURCES}
           accent="var(--color-water)"
+          lang={lang}
         />
         <MacroReference
-          title="Takviye"
-          subtitle="Whey protein"
+          title={t("supplementHeading", lang)}
+          subtitle={t("wheyProtein", lang)}
           items={[PROTEIN_SHAKE]}
           accent="var(--color-accent)"
+          lang={lang}
         />
       </div>
 
@@ -192,22 +196,25 @@ export function NutritionView() {
       <div className="safe-bottom-nav mt-5">
         <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
           <h2 className="mb-3 text-[13px] font-bold uppercase tracking-widest text-[var(--color-text-mute)]">
-            Günlük Kurallar
+            {t("dailyRulesHeading", lang)}
           </h2>
           <ul className="space-y-2">
-            {NUTRITION_RULES.map((rule) => (
-              <li
-                key={rule.text}
-                className="flex items-center gap-3 rounded-xl bg-[var(--color-surface-2)] px-3 py-2.5"
-              >
-                <span className="text-xl" aria-hidden>
-                  {rule.icon}
-                </span>
-                <span className="text-sm text-[var(--color-text)]">
-                  {rule.text}
-                </span>
-              </li>
-            ))}
+            {NUTRITION_RULES.map((rule) => {
+              const text = l(rule.text, lang);
+              return (
+                <li
+                  key={text}
+                  className="flex items-center gap-3 rounded-xl bg-[var(--color-surface-2)] px-3 py-2.5"
+                >
+                  <span className="text-xl" aria-hidden>
+                    {rule.icon}
+                  </span>
+                  <span className="text-sm text-[var(--color-text)]">
+                    {text}
+                  </span>
+                </li>
+              );
+            })}
           </ul>
         </section>
       </div>
@@ -217,20 +224,21 @@ export function NutritionView() {
 
 // -------------------- Scenario button --------------------
 
-const HIGHLIGHT_LABELS: Record<NonNullable<Scenario["highlight"]>, string> = {
-  "high-protein": "Yüksek Protein",
-  "low-fat": "Düşük Yağ",
-  balanced: "Dengeli",
-  "low-cal": "Düşük Kalori",
+const HIGHLIGHT_LABEL_KEYS: Record<NonNullable<Scenario["highlight"]>, UIKey> = {
+  "high-protein": "highlightHighProtein",
+  "low-fat": "highlightLowFat",
+  balanced: "highlightBalanced",
+  "low-cal": "highlightLowCal",
 };
 
 type ScenarioProps = {
   scenario: Scenario;
   selected: boolean;
   onSelect: () => void;
+  lang: Lang;
 };
 
-function ScenarioButton({ scenario, selected, onSelect }: ScenarioProps) {
+function ScenarioButton({ scenario, selected, onSelect, lang }: ScenarioProps) {
   return (
     <button
       type="button"
@@ -259,24 +267,24 @@ function ScenarioButton({ scenario, selected, onSelect }: ScenarioProps) {
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-1.5">
             <h3 className="text-[15px] font-semibold leading-tight text-[var(--color-text)]">
-              {scenario.name}
+              {l(scenario.name, lang)}
             </h3>
             {selected && (
               <span className="rounded-md bg-[var(--color-accent)] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
-                Aktif
+                {t("scenarioActive", lang)}
               </span>
             )}
             {scenario.highlight && !selected && (
               <span className="rounded-md bg-[var(--color-surface-2)] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--color-text-mute)]">
-                {HIGHLIGHT_LABELS[scenario.highlight]}
+                {t(HIGHLIGHT_LABEL_KEYS[scenario.highlight], lang)}
               </span>
             )}
           </div>
           <p className="mt-1 truncate text-xs text-[var(--color-text-dim)]">
-            {scenario.proteinSource}
+            {l(scenario.proteinSource, lang)}
           </p>
           <p className="truncate text-xs text-[var(--color-text-dim)]">
-            + {scenario.carbSource}
+            + {l(scenario.carbSource, lang)}
           </p>
         </div>
       </div>
@@ -285,7 +293,7 @@ function ScenarioButton({ scenario, selected, onSelect }: ScenarioProps) {
       </div>
       {scenario.note && (
         <p className="mt-2 text-xs italic leading-snug text-[var(--color-text-mute)]">
-          {scenario.note}
+          {l(scenario.note, lang)}
         </p>
       )}
     </button>
@@ -299,9 +307,10 @@ type MacroRefProps = {
   subtitle?: string;
   items: readonly MacroInfo[];
   accent: string;
+  lang: Lang;
 };
 
-function MacroReference({ title, subtitle, items, accent }: MacroRefProps) {
+function MacroReference({ title, subtitle, items, accent, lang }: MacroRefProps) {
   return (
     <section className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
       <div className="mb-3 flex items-baseline justify-between gap-2">
@@ -322,29 +331,32 @@ function MacroReference({ title, subtitle, items, accent }: MacroRefProps) {
         />
       </div>
       <ul className="space-y-2.5">
-        {items.map((item) => (
-          <li
-            key={item.name}
-            className="flex items-start gap-3 rounded-xl bg-[var(--color-surface-2)] p-2.5"
-          >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-3)] text-lg">
-              {item.emoji}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-baseline justify-between gap-2">
-                <span className="truncate text-sm font-semibold text-[var(--color-text)]">
-                  {item.name}
-                </span>
-                <span className="shrink-0 text-[10px] font-medium text-[var(--color-text-mute)]">
-                  {item.unit}
-                </span>
+        {items.map((item) => {
+          const name = l(item.name, lang);
+          return (
+            <li
+              key={name}
+              className="flex items-start gap-3 rounded-xl bg-[var(--color-surface-2)] p-2.5"
+            >
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-surface-3)] text-lg">
+                {item.emoji}
               </div>
-              <div className="mt-1.5">
-                <MacroChip data={item} size="sm" />
+              <div className="min-w-0 flex-1">
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="truncate text-sm font-semibold text-[var(--color-text)]">
+                    {name}
+                  </span>
+                  <span className="shrink-0 text-[10px] font-medium text-[var(--color-text-mute)]">
+                    {l(item.unit, lang)}
+                  </span>
+                </div>
+                <div className="mt-1.5">
+                  <MacroChip data={item} size="sm" />
+                </div>
               </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

@@ -10,8 +10,10 @@ import {
   type DayKey,
 } from "../data/workouts";
 import { useWorkoutDayState } from "../lib/hooks";
+import { l, t, useLang } from "../lib/i18n";
 
 export function WorkoutView() {
+  const [lang] = useLang();
   const todayKey = getTodayKey();
   const [selected, setSelected] = useState<DayKey>(todayKey);
   const day = getDayByKey(selected);
@@ -43,7 +45,7 @@ export function WorkoutView() {
     if (day.isRest) return;
     if (
       window.confirm(
-        `${day.dayLong} antrenmanının tüm setlerini sıfırlamak istiyor musun?`,
+        `${l(day.dayLong, lang)} ${t("workoutResetConfirm", lang)}`,
       )
     ) {
       resetAll();
@@ -53,8 +55,8 @@ export function WorkoutView() {
   return (
     <div className="flex flex-1 flex-col px-4">
       <TopBar
-        title="Antrenman"
-        subtitle="Haftalık program"
+        title={t("workoutTitle", lang)}
+        subtitle={t("workoutSubtitle", lang)}
         onReset={day.isRest ? undefined : handleReset}
       />
 
@@ -74,7 +76,7 @@ export function WorkoutView() {
                 className="shrink-0"
               >
                 <DayChip
-                  label={d.dayShort}
+                  label={l(d.dayShort, lang)}
                   active={active}
                   isToday={k === todayKey}
                   isRest={d.isRest}
