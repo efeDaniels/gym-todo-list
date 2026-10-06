@@ -3,6 +3,7 @@ import { BottomNav, type Tab } from "./components/BottomNav";
 import { TodayView } from "./components/TodayView";
 import { WorkoutView } from "./components/WorkoutView";
 import { NutritionView } from "./components/NutritionView";
+import { TravelView } from "./components/TravelView";
 import { usePersistentState } from "./lib/storage";
 import { t, useLang } from "./lib/i18n";
 
@@ -29,6 +30,7 @@ function App() {
         {tab === "today" && <TodayView onNavigate={setTab} />}
         {tab === "workout" && <WorkoutView />}
         {tab === "nutrition" && <NutritionView />}
+        {tab === "travel" && <TravelView />}
       </main>
       <BottomNav tab={tab} onChange={setTab} />
     </>

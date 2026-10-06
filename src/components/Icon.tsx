@@ -128,3 +128,19 @@ export function InfoIcon({ className = "", size = 18 }: IconProps) {
     </svg>
   );
 }
+
+export function PlaneIcon({ className = "", size = 22 }: IconProps) {
+  return (
+    <svg {...svgProps(size, className)}>
+      <path d="M3.5 13 L10 11 L13 3 L15 3 L13.5 11 L19.5 10 L20.5 11 L15 14 L14 20 L12.5 20.5 L11 15 L5 16 L3.5 15 Z" />
+    </svg>
+  );
+}
+
+export function ChevronDownIcon({ className = "", size = 22 }: IconProps) {
+  return (
+    <svg {...svgProps(size, className)}>
+      <path d="M6 9 L12 15 L18 9" />
+    </svg>
+  );
+}

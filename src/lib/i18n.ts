@@ -67,6 +67,7 @@ export const UI = {
   navToday: loc("Bugün", "Today"),
   navWorkout: loc("Antrenman", "Workout"),
   navNutrition: loc("Beslenme", "Nutrition"),
+  navTravel: loc("Seyahat", "Travel"),
   navAria: loc("Ana navigasyon", "Main navigation"),
 
   // ---- TopBar
@@ -165,6 +166,64 @@ export const UI = {
   macroGP: loc("gP", "gP"),
   macroGC: loc("gC", "gC"),
   macroGY: loc("gY", "gF"),
+
+  // ---- TravelView
+  travelTitle: loc("Seyahat", "Travel"),
+  travelSubtitle: loc(
+    "2 ay · 3 gün PPL + bonus",
+    "2 months · 3-day PPL + bonus",
+  ),
+  travelResearchHeading: loc("Araştırma Özeti", "Research Summary"),
+  travelOptimHeading: loc("Nasıl Optimize Edildi", "How It's Optimized"),
+  travelCoreHeading: loc("Ana 3 Gün PPL", "Core 3-Day PPL"),
+  travelCoreSubtitle: loc(
+    "Haftalık rotasyon · her kas 1x/hafta",
+    "Weekly rotation · each muscle 1x/week",
+  ),
+  travelBonusHeading: loc("Bonus Günler", "Bonus Days"),
+  travelBonusSubtitle: loc(
+    "Fazla vaktin olursa — küçük kaslar en yüksek ROI",
+    "When you have extra time — small muscles = highest ROI",
+  ),
+  travelDecisionHeading: loc(
+    "Kaç bonus günün var?",
+    "How many bonus days?",
+  ),
+  travelScheduleHeading: loc("Örnek Haftalar", "Example Weeks"),
+  travelProgressionHeading: loc("Progresyon", "Progression"),
+  travelProgressionSubtitle: loc(
+    "Double Progression · 8 hafta",
+    "Double Progression · 8 weeks",
+  ),
+  travelDeloadHeading: loc("Deload", "Deload"),
+  travelRulesHeading: loc("Yerleştirme Kuralları", "Scheduling Rules"),
+  travelSubsHeading: loc(
+    "Seyahatte Ekipman Esnekliği",
+    "Travel Equipment Flexibility",
+  ),
+  travelSubsSubtitle: loc(
+    "Yoksa yerine ne koy",
+    "What to swap when gear is missing",
+  ),
+  travelNutritionHeading: loc(
+    "Beslenme Minimum",
+    "Nutrition Minimum",
+  ),
+  travelDurationLabel: loc("Süre", "Duration"),
+  travelFocusLabel: loc("Odak", "Focus"),
+  travelVolumeLabel: loc("Hacim", "Volume"),
+  travelRestLabel: loc("Dinlenme", "Rest"),
+  travelWhenLabel: loc("Ne zaman", "When"),
+  travelRationaleLabel: loc("Neden", "Why"),
+  travelMissingLabel: loc("Yoksa", "If missing"),
+  travelReplaceLabel: loc("Yerine", "Replace with"),
+  travelDaysPerWeekSuffix: loc("gün/hafta", "days/week"),
+  travelExpandAria: loc("Detayı aç", "Expand details"),
+  travelCollapseAria: loc("Detayı kapat", "Collapse details"),
+  travelSetsShort: loc("set", "sets"),
+  travelExercisesSuffix: loc("hareket", "exercises"),
+  travelTagCompound: loc("COMPOUND", "COMPOUND"),
+  travelTagSuperset: loc("SUPERSET", "SUPERSET"),
 
   // ---- HTML/document
   documentTitle: loc("Gym & Beslenme", "Gym & Nutrition"),

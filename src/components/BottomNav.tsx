@@ -1,7 +1,7 @@
-import { AppleIcon, DumbbellIcon, TodayIcon } from "./Icon";
+import { AppleIcon, DumbbellIcon, PlaneIcon, TodayIcon } from "./Icon";
 import { t, useLang, type UIKey } from "../lib/i18n";
 
-export type Tab = "today" | "workout" | "nutrition";
+export type Tab = "today" | "workout" | "nutrition" | "travel";
 
 type Props = {
   tab: Tab;
@@ -16,6 +16,7 @@ const TABS: {
   { key: "today", labelKey: "navToday", Icon: TodayIcon },
   { key: "workout", labelKey: "navWorkout", Icon: DumbbellIcon },
   { key: "nutrition", labelKey: "navNutrition", Icon: AppleIcon },
+  { key: "travel", labelKey: "navTravel", Icon: PlaneIcon },
 ];
 
 export function BottomNav({ tab, onChange }: Props) {
